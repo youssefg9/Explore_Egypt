@@ -6,6 +6,8 @@ import 'package:explore_egypt/components/rounded_input_field.dart';
 import 'package:explore_egypt/components/rounded_password_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+
+
 import 'dart:io';
 
 
@@ -23,13 +25,25 @@ import 'package:provider/provider.dart';
 import 'package:explore_egypt/authentication_service.dart';
 import 'package:explore_egypt/constants.dart';
 
+
+
+
 class Body extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String mailtext="";
   String passtext="";
-  Body({Key key,}) : super(key: key); //elmafroud teb2a const
+  final _snackBar1 = SnackBar(
+    content: Text('Wrong email format'),
+  );
+  final _snackBar2 = SnackBar(
+    content: Text('password is at least 6 chars'),
+  );
+  final _snackBar3 = SnackBar(
+    content: Text('passwords doesnt match'),
+  );
+  Body({Key key,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,28 +77,24 @@ class Body extends StatelessWidget {
             ),
             RoundedButton(
               text: "LOGIN",
-              press: () async {
+
+              press: (
+                  ) async {
                 bool isSignIn=false;
                 String x=await AuthenticationWrapper.context.read<AuthenticationService>().signIn(
                   email: mailtext, password: passtext,
                 );
-                print(x);
                 switch(x){
-                  case "Given String is empty or null":isSignIn=false;break;
-                  case "The password is invalid or the user does not have a password.":isSignIn=false;break;
-                  case "Signed in":isSignIn=true;break;
+                  case "Given String is empty or null":isSignIn=false;
+                  break;
+                  case "The password is invalid or the user does not have a password.":isSignIn=false;
+                  break;
+                  case "Signed in":isSignIn=true;
+                  break;
                 }
 
-          //    isSignIn=true;
 
 
-                /*Navigator.push(context, MaterialPageRoute(builder: (context) {
-                      LoginScreen.afterScreen=AfterAuthScreen();
-                      return LoginScreen.afterScreen;
-                    },
-                  ),
-                );*/
-                print("before if for validation");
                 if ((ExploreEgypt.firebaseUser != null)&&(isSignIn)) {
 
                   ExploreEgypt.currentUserMail=mailtext;
@@ -93,7 +103,6 @@ class Body extends StatelessWidget {
                   UserPreferences.myUser.email=mailtext;
                   SignupScreen.afterScreen=AfterAuthScreen(mailtext,passtext);
 
-                  print("testing now");
                   print(AfterAuthScreen.locations.length);
                   Navigator.push(
                       context , MaterialPageRoute(builder: (context) =>SignupScreen.afterScreen ));

@@ -11,7 +11,7 @@ class RoundedPasswordField extends StatelessWidget {
     this.hintText,
     this.onChanged,
     TextEditingController controller,
-    validator,
+    validator, String validator2,
     //this.passwordController,
   }) : super(key: key);
 
